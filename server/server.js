@@ -23,6 +23,29 @@ db.sequelize.authenticate()
     console.error('Unable to connect to the database:', err);
   });
 
+// Health Check
+app.get("/api/health", (req, res) => {
+  const dbConfigured = !!process.env.DB_HOST && !!process.env.DB_USERNAME && !!process.env.DB_PASSWORD;
+  res.status(200).json({ 
+    status: "OK", 
+    message: "Server is running", 
+    env: process.env.NODE_ENV,
+    db_configured: dbConfigured,
+    db_host: process.env.DB_HOST ? "Set" : "Not Set",
+    db_user: process.env.DB_USERNAME ? "Set" : "Not Set"
+  });
+});
+
+// Manual DB Sync (Debugging only - secure this in real prod)
+app.get("/api/debug/db-sync", async (req, res) => {
+  try {
+    await db.sequelize.sync({ alter: true });
+    res.status(200).json({ message: "Database synchronized successfully (alter: true)." });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to sync database", error: error.message });
+  }
+});
+
 if (process.env.NODE_ENV !== 'production') {
   // Only sync if necessary in development
   db.sequelize.sync()

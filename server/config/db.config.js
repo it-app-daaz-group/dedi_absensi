@@ -5,7 +5,7 @@ module.exports = {
   USER: process.env.DB_USERNAME || process.env.DB_USER || "root",
   PASSWORD: process.env.DB_PASSWORD || "",
   DB: process.env.DB_DATABASE || process.env.DB_NAME || "dedi_absensi",
-  PORT: process.env.DB_PORT || 3306,
+  PORT: parseInt(process.env.DB_PORT || "3306", 10),
   dialect: "mysql",
   dialectOptions: {
     ssl: {

@@ -1,3 +1,3 @@
 module.exports = {
-  secret: "laragondocs-secret-key"
+  secret: process.env.JWT_SECRET || "laragondocs-secret-key"
 };
