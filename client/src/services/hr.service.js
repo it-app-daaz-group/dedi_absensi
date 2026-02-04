@@ -1,7 +1,7 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 
-const API_URL = import.meta.env.VITE_API_URL + "hr/";
+const API_URL = (import.meta.env.VITE_API_URL || "/api/") + "hr/";
 
 const getSettings = () => {
   return axios.get(API_URL + "settings", { headers: authHeader() });
