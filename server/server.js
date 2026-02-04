@@ -14,24 +14,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
 
+// Always check database connection
+db.sequelize.authenticate()
+  .then(() => {
+    console.log('Connection to TiDB Cloud has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+
 if (process.env.NODE_ENV !== 'production') {
-  // db.sequelize.sync({ alter: true }).then(() => {
-  //   console.log("Database synced successfully.");
-  // }).catch((err) => {
-  //   console.error("Failed to sync database: " + err.message);
-  // });
-  
-  db.sequelize.authenticate()
+  // Only sync if necessary in development
+  db.sequelize.sync()
     .then(() => {
-      console.log('Connection to TiDB Cloud has been established successfully.');
-      // Only sync if necessary, avoid alter on TiDB for now to prevent "can't change column constraint" error
-      return db.sequelize.sync(); 
+      console.log("Database synced successfully (Dev).");
     })
-    .then(() => {
-      console.log("Database synced successfully.");
-    })
-    .catch(err => {
-      console.error('Unable to connect to the database:', err);
+    .catch((err) => {
+      console.error("Failed to sync database: " + err.message);
     });
 }
 

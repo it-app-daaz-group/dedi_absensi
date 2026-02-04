@@ -18,11 +18,13 @@ exports.signup = (req, res) => {
       res.send({ message: "User was registered successfully!" });
     })
     .catch(err => {
+      console.error("Signup Error:", err);
       res.status(500).send({ message: err.message });
     });
 };
 
 exports.signin = (req, res) => {
+  console.log("Signin request for NIP:", req.body.nip);
   User.findOne({
     where: {
       nip: req.body.nip
@@ -30,6 +32,7 @@ exports.signin = (req, res) => {
   })
     .then(user => {
       if (!user) {
+        console.log("User not found for NIP:", req.body.nip);
         return res.status(404).send({ message: "User Not found." });
       }
 
@@ -39,6 +42,7 @@ exports.signin = (req, res) => {
       );
 
       if (!passwordIsValid) {
+        console.log("Invalid password for NIP:", req.body.nip);
         return res.status(401).send({
           accessToken: null,
           message: "Invalid Password!"
@@ -63,6 +67,7 @@ exports.signin = (req, res) => {
       });
     })
     .catch(err => {
-      res.status(500).send({ message: err.message });
+      console.error("Signin Error:", err);
+      res.status(500).send({ message: "Internal Server Error: " + err.message });
     });
 };
