@@ -45,6 +45,15 @@ require("./routes/user.routes")(app);
 require("./routes/hr.routes")(app); // HR Routes
 require("./routes/attendance.routes")(app);
 
+// Handle 404 for API routes
+app.use("/api/*", (req, res) => {
+  res.status(404).json({ 
+    message: "API Route not found (Express)", 
+    path: req.originalUrl,
+    method: req.method 
+  });
+});
+
 const PORT = process.env.PORT || 8080;
 
 if (require.main === module) {
