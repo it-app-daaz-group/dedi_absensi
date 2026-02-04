@@ -31,6 +31,7 @@ function App() {
             <Route path="employees/edit/:id" element={<EmployeeForm />} />
             <Route path="settings" element={<HrSettingsPage />} />
             <Route path="attendance" element={<AttendancePage />} />
+            <Route path="reports" element={<AttendanceReport />} />
           </Route>
           <Route path="/" element={<Navigate to="/dashboard" />} />
         </Routes>
