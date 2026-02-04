@@ -4,6 +4,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const db = require("./models");
+const bcrypt = require("bcryptjs");
 
 const app = express();
 
@@ -43,6 +44,51 @@ app.get("/api/debug/db-sync", async (req, res) => {
     res.status(200).json({ message: "Database synchronized successfully (alter: true)." });
   } catch (error) {
     res.status(500).json({ message: "Failed to sync database", error: error.message });
+  }
+});
+
+// Manual Seed Admin (Debugging only)
+app.get("/api/debug/seed-admin", async (req, res) => {
+  try {
+    const User = db.user;
+    const adminExists = await User.findOne({ where: { role: 'admin' } });
+    
+    if (adminExists) {
+      // If admin exists but password is wrong, update it (Debugging only)
+      adminExists.password = bcrypt.hashSync("doni1234", 8);
+      adminExists.name = "Doni (Admin)";
+      adminExists.nip = "doni";
+      await adminExists.save();
+      
+      return res.status(200).json({ 
+        message: "Admin user updated successfully.", 
+        credentials: {
+          nip: "doni",
+          password: "doni1234"
+        }
+      });
+    }
+
+    await User.create({
+      nip: "doni",
+      name: "Doni (Admin)",
+      email: "doni@laragondocs.com",
+      password: bcrypt.hashSync("doni1234", 8),
+      role: "admin",
+      status: "active",
+      department: "IT",
+      position: "Administrator"
+    });
+
+    res.status(201).json({ 
+      message: "Admin user created successfully.", 
+      credentials: {
+        nip: "doni",
+        password: "doni1234"
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to seed admin", error: error.message });
   }
 });
 

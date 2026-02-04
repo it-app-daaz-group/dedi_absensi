@@ -7,6 +7,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   port: dbConfig.PORT,
   dialect: dbConfig.dialect,
+  dialectModule: require('mysql2'), // Fix for Vercel/Serverless
   dialectOptions: dbConfig.dialectOptions,
   operatorsAliases: 0,
   pool: {
