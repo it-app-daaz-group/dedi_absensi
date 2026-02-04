@@ -1,0 +1,16 @@
+# Global Ignores
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# SQL Dumps
+*.sql
+dedi_absensi_migration.sql
+
+# Dependencies (Global)
+node_modules/
+**/node_modules/
+server/node_modules/
+client/node_modules/
+**/uploads/
